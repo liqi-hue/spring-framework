@@ -1,0 +1,4 @@
+com/atguigu/spring/MainTest.java
+ com.atguigu.spring.MainTest
+com/atguigu/spring/bean/Person.java
+ com.atguigu.spring.bean.Person
