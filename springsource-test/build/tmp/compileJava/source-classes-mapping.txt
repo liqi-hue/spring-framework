@@ -1,4 +1,24 @@
+com/atguigu/spring/processor/factory/MyBeanFactoryPostProcessor.java
+ com.atguigu.spring.processor.factory.MyBeanFactoryPostProcessor
+com/atguigu/spring/config/MainConfig.java
+ com.atguigu.spring.config.MainConfig
+com/atguigu/spring/processor/bean/MyBeanPostProcessor.java
+ com.atguigu.spring.processor.bean.MyBeanPostProcessor
+com/atguigu/spring/processor/bean/MyInstantiationAwareBeanPostProcessor.java
+ com.atguigu.spring.processor.bean.MyInstantiationAwareBeanPostProcessor
+com/atguigu/spring/processor/bean/MyMergedBeanDefinitionPostProcessor.java
+ com.atguigu.spring.processor.bean.MyMergedBeanDefinitionPostProcessor
+com/atguigu/spring/processor/factory/MyBeanDefinitionRegistryPostProcessor.java
+ com.atguigu.spring.processor.factory.MyBeanDefinitionRegistryPostProcessor
+com/atguigu/spring/processor/bean/MyInitializingBean.java
+ com.atguigu.spring.processor.bean.MyInitializingBean
+com/atguigu/spring/bean/Cat.java
+ com.atguigu.spring.bean.Cat
 com/atguigu/spring/MainTest.java
  com.atguigu.spring.MainTest
+com/atguigu/spring/AnnotationMainTest.java
+ com.atguigu.spring.AnnotationMainTest
 com/atguigu/spring/bean/Person.java
  com.atguigu.spring.bean.Person
+com/atguigu/spring/processor/bean/MySmartInstantiationAwareBeanPostProcessor.java
+ com.atguigu.spring.processor.bean.MySmartInstantiationAwareBeanPostProcessor
