@@ -243,7 +243,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-		// 后置处理器干预配置类
+		// 后置处理器解析配置类(把配置类声明的组件信息保存到容器)
 		processConfigBeanDefinitions(registry);
 	}
 

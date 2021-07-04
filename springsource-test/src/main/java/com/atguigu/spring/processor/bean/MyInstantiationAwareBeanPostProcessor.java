@@ -21,13 +21,13 @@ public class MyInstantiationAwareBeanPostProcessor implements InstantiationAware
 		return InstantiationAwareBeanPostProcessor.super.postProcessBeforeInstantiation(beanClass, beanName);
 	}
 
-	@Override
+	@Override// 属性赋值之前，可以准备一些东西,返回false可以打断属性赋值
 	public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
 		System.out.println("postProcessAfterInstantiation...");
 		return InstantiationAwareBeanPostProcessor.super.postProcessAfterInstantiation(bean, beanName);
 	}
 
-	@Override
+	@Override//自动装配发生在此方法,可以在此解析自定义注解
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
 		System.out.println("postProcessProperties");
 		return InstantiationAwareBeanPostProcessor.super.postProcessProperties(pvs, bean, beanName);

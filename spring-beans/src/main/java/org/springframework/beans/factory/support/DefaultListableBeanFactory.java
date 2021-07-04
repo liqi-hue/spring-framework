@@ -557,7 +557,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		return resolvedBeanNames;
 	}
-	//获取组件在容器中所有的名字
+	//根据类型获取所有组件在容器中所有的名字
 	private String[] doGetBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
 		List<String> result = new ArrayList<>();//getBeanNamesForType
 		// spring 没有保存bean的类型与bean定义信息的关系，所以通过监听器的类型来判断bean的类型比较笨(bean的类型保存在bean定义信息中)
@@ -926,6 +926,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				if (isFactoryBean(beanName)) {
+					/** 创建工厂bean 名字为 &beanName 此时创建的是工厂，保存在单例池，工厂创建的bean不会保存在单例池中*/
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 					if (bean instanceof FactoryBean) {
 						FactoryBean<?> factory = (FactoryBean<?>) bean;
@@ -940,20 +941,22 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 									((SmartFactoryBean<?>) factory).isEagerInit());
 						}
 						if (isEagerInit) {
+							/** */
 							getBean(beanName);
 						}
 					}
 				}
 				else {
-					// 获取Bean
+					/** 普通bean 获取Bean 从单例池获取，无则创建*/
 					getBean(beanName);
 				}
 			}
 		}
-
+		/** 所有单例bean创建完成后 触发post-initialization 实现 SmartInitializingSingleton 的bean*/
 		// Trigger post-initialization callback for all applicable beans...
 		for (String beanName : beanNames) {
 			Object singletonInstance = getSingleton(beanName);
+			/**执行所有实现 SmartInitializingSingleton 接口的bean的 afterSingletonsInstantiated 方法*/
 			if (singletonInstance instanceof SmartInitializingSingleton) {
 				StartupStep smartInitialize = this.getApplicationStartup().start("spring.beans.smart-initialize")
 						.tag("beanName", beanName);

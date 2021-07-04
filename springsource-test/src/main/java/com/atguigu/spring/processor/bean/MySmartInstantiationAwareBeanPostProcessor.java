@@ -21,7 +21,7 @@ public class MySmartInstantiationAwareBeanPostProcessor implements SmartInstanti
 		return SmartInstantiationAwareBeanPostProcessor.super.predictBeanType(beanClass, beanName);
 	}
 
-	@Override// 返回要使用的构造器
+	@Override// 实例化bean之前返回要使用的构造器，后置处理器将会为bean定义信息设置代理对象构造器
 	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) throws BeansException {
 		System.out.println("determineCandidateConstructors...");
 		return SmartInstantiationAwareBeanPostProcessor.super.determineCandidateConstructors(beanClass, beanName);

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor;
 import org.springframework.beans.support.ResourceEditorRegistrar;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -548,7 +549,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare this context for refreshing.
 			prepareRefresh();
-
+			// 创建工厂，导入所有配置
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -561,9 +562,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// Invoke factory processors registered as beans in the context.
-				// 创建并执行 beanFactory 的后置增强器，可以对工厂进行一些设置,配置类解析，注册一些bean信息
+				/** 创建并执行 beanFactory 的后置增强器，可以对工厂进行一些设置,配置类解析，注册配置类bean信息  */
 				invokeBeanFactoryPostProcessors(beanFactory);
-				// 注册并创建bean的后置处理器单独保存，对接下来创建bean做一些增强(动态代理等)
+				/** 创建bean的后置处理器单独保存，对接下来创建bean做一些增强(动态代理等) */
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
@@ -576,7 +577,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
-				// SmartInstantiationAwareBeanPostProcessor 后置处理器工作了,可以决定组件类型(创建単实例bean之前还可以决定一次)
+				/** SmartInstantiationAwareBeanPostProcessor 后置处理器工作了,可以决定组件类型(创建単实例bean之前还可以决定一次) */
 				// Check for listener beans and register them.
 				registerListeners();
 
@@ -867,7 +868,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		for (ApplicationListener<?> listener : getApplicationListeners()) {
 			getApplicationEventMulticaster().addApplicationListener(listener);
 		}
-
+		/** */
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let post-processors apply to them!
 		String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true, false);
@@ -903,13 +904,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		if (!beanFactory.hasEmbeddedValueResolver()) {// 添加一个值解析器
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
-		// SmartInstantiationAwareBeanPostProcessor 后置处理器工作
+		/** SmartInstantiationAwareBeanPostProcessor 后置处理器工作 再次预测组件类型*/
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);// 从容器拿组件(无组件则创建)
 		}
-
 		// Stop using the temporary ClassLoader for type matching.
 		beanFactory.setTempClassLoader(null);
 

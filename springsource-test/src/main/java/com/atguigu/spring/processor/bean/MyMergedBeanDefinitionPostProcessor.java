@@ -14,7 +14,7 @@ public class MyMergedBeanDefinitionPostProcessor implements MergedBeanDefinition
 	public MyMergedBeanDefinitionPostProcessor(){
 		System.out.println("MyMergedBeanDefinitionPostProcessor...");
 	}
-	@Override
+	@Override//实例化bean后执行，可以修改bean定义信息
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		System.out.println("postProcessMergedBeanDefinition...");
 	}
