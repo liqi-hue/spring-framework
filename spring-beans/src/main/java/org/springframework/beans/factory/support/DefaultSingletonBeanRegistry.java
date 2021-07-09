@@ -198,8 +198,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
 								singletonObject = singletonFactory.getObject();
-								/** 先把beanName加入早期缓存*/
+								/** 先把beanName加入早期缓存 二级缓存*/
 								this.earlySingletonObjects.put(beanName, singletonObject);
+								/** 移除三级缓存*/
 								this.singletonFactories.remove(beanName);
 							}
 						}
@@ -231,13 +232,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				/** 把当前beanName添加到正在被创建的 bean 集合  this.singletonsCurrentlyInCreation.add(beanName)*/
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
 				if (recordSuppressedExceptions) {
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
-				try {/** Lambda表达式调用真正创建bean*/
+				try {/** Lambda表达式调用真正创建bean 并完成属性赋值*/
 					singletonObject = singletonFactory.getObject();
 					newSingleton = true;
 				}

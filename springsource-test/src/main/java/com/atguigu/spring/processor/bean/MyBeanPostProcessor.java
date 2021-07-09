@@ -14,6 +14,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 	public MyBeanPostProcessor(){
 		System.out.println("MyBeanPostProcessor...");
 	}
+	/**bean初始化环节执行这两个方法*/
 	@Override// 可以改变之前创建的bean实例,或设置值
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		System.out.println("postProcessBeforeInitialization");

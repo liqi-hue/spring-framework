@@ -60,7 +60,9 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
+		/**准备spring空容器，注册配置类,保存在 ContextLoaderListener 监听器中，把监听器保存在tomcat容器，利用监听器回调初始化spring容器*/
 		super.onStartup(servletContext);
+		/**准备springMVC空容器，注册配置类，保存在 dispatcherServlet 中，并把 dispatcherServlet 添加到tomcat容器，利用Servlet init() 初始化web容器*/
 		registerDispatcherServlet(servletContext);
 	}
 
@@ -78,10 +80,10 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	protected void registerDispatcherServlet(ServletContext servletContext) {
 		String servletName = getServletName();
 		Assert.hasLength(servletName, "getServletName() must not return null or empty");
-
+		/**创建 springMVC容器 注册配置类*/
 		WebApplicationContext servletAppContext = createServletApplicationContext();
 		Assert.notNull(servletAppContext, "createServletApplicationContext() must not return null");
-
+		/**创建 DispatcherServlet 并把web容器保存*/
 		FrameworkServlet dispatcherServlet = createDispatcherServlet(servletAppContext);
 		Assert.notNull(dispatcherServlet, "createDispatcherServlet(WebApplicationContext) must not return null");
 		dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());

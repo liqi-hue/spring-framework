@@ -546,13 +546,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
-
+			/** 第一步，准备环境*/
 			// Prepare this context for refreshing.
 			prepareRefresh();
-			// 创建工厂，导入所有配置
+			/** 获取准备好的空 beanFactory*/
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-
+			/** 给工厂注册一些必要的组件*/
 			// Prepare the bean factory for use in this context.
 			prepareBeanFactory(beanFactory);
 
@@ -561,28 +561,32 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
+
 				// Invoke factory processors registered as beans in the context.
 				/** 创建并执行 beanFactory 的后置增强器，可以对工厂进行一些设置,配置类解析，注册配置类bean信息  */
 				invokeBeanFactoryPostProcessors(beanFactory);
+
 				/** 创建bean的后置处理器单独保存，对接下来创建bean做一些增强(动态代理等) */
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
-				beanPostProcess.end();
 
+				beanPostProcess.end();
+				/** 初始化国际化组件*/
 				// Initialize message source for this context.
 				initMessageSource();
-
+				/** 根据beanName applicationEventMulticaster查看容器是否有事件多播器，没有添加一个默认的单例对象*/
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
-
+				/** 空方法，留给子类*/
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
 				/** SmartInstantiationAwareBeanPostProcessor 后置处理器工作了,可以决定组件类型(创建単实例bean之前还可以决定一次) */
 				// Check for listener beans and register them.
+				/** 获取容器所有监听器，把所有监听器添加到多播器，观察者模式*/
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				// 创建剩余单例bean
+				/** 创建剩余单例bean */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -632,14 +636,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				logger.debug("Refreshing " + getDisplayName());
 			}
 		}
-
+		/** 空实现 可以在此处加载一些信息 其他子容器自行实现*/
 		// Initialize any placeholder property sources in the context environment.
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
 		getEnvironment().validateRequiredProperties();
-
+		/** 早期监听器 空*/
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
@@ -649,7 +653,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
-
+		/** 存储早期事件 空*/
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
 		this.earlyApplicationEvents = new LinkedHashSet<>();
@@ -746,6 +750,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		/** 后置处理器的代理,专门执行后置处理器*/
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
@@ -805,6 +810,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void initApplicationEventMulticaster() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		/** applicationEventMulticaster */
 		if (beanFactory.containsLocalBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME)) {
 			this.applicationEventMulticaster =
 					beanFactory.getBean(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, ApplicationEventMulticaster.class);

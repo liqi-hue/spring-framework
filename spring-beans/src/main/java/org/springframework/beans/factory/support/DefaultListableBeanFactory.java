@@ -560,7 +560,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	//根据类型获取所有组件在容器中所有的名字
 	private String[] doGetBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
 		List<String> result = new ArrayList<>();//getBeanNamesForType
-		// spring 没有保存bean的类型与bean定义信息的关系，所以通过监听器的类型来判断bean的类型比较笨(bean的类型保存在bean定义信息中)
+		/** spring 没有保存bean的类型与bean定义信息的关系，所以通过监听器的类型来判断bean的类型比较笨(bean的类型保存在bean定义信息中) */
 		// Check all bean definitions. 拿到bean的定义名字
 		for (String beanName : this.beanDefinitionNames) {
 			// Only consider bean as eligible if the bean name is not defined as alias for some other bean.
@@ -1304,7 +1304,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		else {
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
-			if (result == null) {
+			if (result == null) {/**解析自动装配的字段*/
 				result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
 			}
 			return result;
@@ -1347,7 +1347,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (multipleBeans != null) {
 				return multipleBeans;
 			}
-
+			/** 拿到自动装配的属性名和类型*/
 			Map<String, Object> matchingBeans = findAutowireCandidates(beanName, type, descriptor);
 			if (matchingBeans.isEmpty()) {
 				if (isRequired(descriptor)) {
@@ -1384,7 +1384,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (autowiredBeanNames != null) {
 				autowiredBeanNames.add(autowiredBeanName);
 			}
-			if (instanceCandidate instanceof Class) {
+			if (instanceCandidate instanceof Class) {/**通过工厂 getBean(autowiredBeanName) 获取自动装配的字段对应值*/
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
 			Object result = instanceCandidate;

@@ -174,6 +174,7 @@ import javax.servlet.ServletException;
  * @see org.springframework.web.servlet.support.AbstractDispatcherServletInitializer
  * @see org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer
  */
+
 public interface WebApplicationInitializer {
 
 	/**
@@ -184,6 +185,7 @@ public interface WebApplicationInitializer {
 	 * @throws ServletException if any call against the given {@code ServletContext}
 	 * throws a {@code ServletException}
 	 */
+
 	void onStartup(ServletContext servletContext) throws ServletException;
 
 }

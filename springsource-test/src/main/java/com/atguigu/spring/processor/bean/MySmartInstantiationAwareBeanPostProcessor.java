@@ -27,7 +27,7 @@ public class MySmartInstantiationAwareBeanPostProcessor implements SmartInstanti
 		return SmartInstantiationAwareBeanPostProcessor.super.determineCandidateConstructors(beanClass, beanName);
 	}
 
-	@Override// 返回早期的Bean引用
+	@Override// 可以自己返回早期的Bean引用
 	public Object getEarlyBeanReference(Object bean, String beanName) throws BeansException {
 		System.out.println("getEarlyBeanReference...");
 		return SmartInstantiationAwareBeanPostProcessor.super.getEarlyBeanReference(bean, beanName);

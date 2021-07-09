@@ -105,6 +105,11 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 				return true;
 			}
 		}
+
+		/**!StringUtils.hasLength(beanName) ||
+		 * beanName.length() != beanClass.getName().length() + AutowireCapableBeanFactory.ORIGINAL_INSTANCE_SUFFIX.length()
+		 * 返回 false
+		 * */
 		return super.shouldSkip(beanClass, beanName);
 	}
 

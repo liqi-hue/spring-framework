@@ -47,7 +47,7 @@ import org.springframework.util.Assert;
  * @see AnnotationConfigApplicationContext#register
  */
 public class AnnotatedBeanDefinitionReader {
-
+	/**ioc容器，保存bean的定义信息，单例bean等*/
 	private final BeanDefinitionRegistry registry;
 
 	private BeanNameGenerator beanNameGenerator = AnnotationBeanNameGenerator.INSTANCE;
@@ -85,6 +85,7 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+		/** 通过注解配置工具类向容器添加一些核心后置处理器*/
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 

@@ -1,5 +1,6 @@
 package com.atguigu.spring;
 
+import com.atguigu.spring.aop.HelloService;
 import com.atguigu.spring.bean.Cat;
 import com.atguigu.spring.bean.Person;
 import com.atguigu.spring.config.MainConfig;
@@ -27,7 +28,8 @@ public class AnnotationMainTest {
 //		Arrays.asList(ac.getBeanDefinitionNames()).forEach(s -> {
 //			System.out.println(s);
 //		});
-		Person bean = ac.getBean(Person.class);
-		System.out.println("ac == application	" + (ac == bean.getApplicationContext()));
+//		Person bean = ac.getBean(Person.class);
+//		System.out.println("ac == application	" + (ac == bean.getApplicationContext()));
+		ac.getBean(HelloService.class).sayHello("zhangsan");
 	}
 }

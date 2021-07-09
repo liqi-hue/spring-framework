@@ -14,6 +14,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     //引入spring核心容器
     compile(project(":spring-context"))
+    // 引入切面
+    compile(project(":spring-aspects"))
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 
