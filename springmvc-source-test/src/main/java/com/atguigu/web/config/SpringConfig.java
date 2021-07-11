@@ -3,6 +3,7 @@ package com.atguigu.web.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Configuration
 @ComponentScan(basePackages = "com.atguigu.web",excludeFilters = {
-		@ComponentScan.Filter(type = FilterType.ANNOTATION,value = RestController.class)
+		@ComponentScan.Filter(type = FilterType.ANNOTATION,value = Controller.class)
 })
 public class SpringConfig {
 

@@ -302,7 +302,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/** Perform cleanup of request attributes after include request?. */
 	private boolean cleanupAfterInclude = true;
-
+	// 九大组件
 	/** MultipartResolver used by this servlet. */
 	@Nullable
 	private MultipartResolver multipartResolver;
@@ -316,23 +316,23 @@ public class DispatcherServlet extends FrameworkServlet {
 	private ThemeResolver themeResolver;
 
 	/** List of HandlerMappings used by this servlet. */
-	@Nullable
+	@Nullable // 请求映射
 	private List<HandlerMapping> handlerMappings;
 
 	/** List of HandlerAdapters used by this servlet. */
-	@Nullable
+	@Nullable // 处理适配器，【超级反射工具】
 	private List<HandlerAdapter> handlerAdapters;
 
 	/** List of HandlerExceptionResolvers used by this servlet. */
-	@Nullable
+	@Nullable // 异常解析器
 	private List<HandlerExceptionResolver> handlerExceptionResolvers;
 
 	/** RequestToViewNameTranslator used by this servlet. */
-	@Nullable
+	@Nullable // 把请求转成视图名的翻译器
 	private RequestToViewNameTranslator viewNameTranslator;
 
 	/** FlashMapManager used by this servlet. */
-	@Nullable
+	@Nullable // 闪存管理器
 	private FlashMapManager flashMapManager;
 
 	/** List of ViewResolvers used by this servlet. */
@@ -483,7 +483,10 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * This implementation calls {@link #initStrategies}.
+	 *
 	 */
+	//Web  ioc容器初始化完成发布事件时调用，初始化九大组件(从容器拿，容器没有的话，
+	// 八大组件会有默认的 spring家的,加载类路径 DispatcherServlet.properties 拿到全类名，通过反射创建对象)
 	@Override
 	protected void onRefresh(ApplicationContext context) {
 		initStrategies(context);
@@ -493,6 +496,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Initialize the strategy objects that this servlet uses.
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
+	//Web容器初始化完成，监听器回调初始化八大核心组件
 	protected void initStrategies(ApplicationContext context) {
 		initMultipartResolver(context);
 		initLocaleResolver(context);
@@ -589,7 +593,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
-			Map<String, HandlerMapping> matchingBeans =
+			Map<String, HandlerMapping> matchingBeans = /** 先从父容器获取 HandlerMapping */
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.handlerMappings = new ArrayList<>(matchingBeans.values());
@@ -609,7 +613,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
-		if (this.handlerMappings == null) {
+		if (this.handlerMappings == null) {/** 从子容器获取 HandlerMapping */
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No HandlerMappings declared for servlet '" + getServletName() +
@@ -874,11 +878,11 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		String key = strategyInterface.getName();
 		String value = defaultStrategies.getProperty(key);
-		if (value != null) {
+		if (value != null) {/** 拿到springMVC底层的三个 HandlerMapping 全类名*/
 			String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
 			List<T> strategies = new ArrayList<>(classNames.length);
 			for (String className : classNames) {
-				try {
+				try {/** 通过 beanFactory 创建对象 */
 					Class<?> clazz = ClassUtils.forName(className, DispatcherServlet.class.getClassLoader());
 					Object strategy = createDefaultStrategy(context, clazz);
 					strategies.add((T) strategy);
@@ -1034,9 +1038,10 @@ public class DispatcherServlet extends FrameworkServlet {
 			try {
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
-
+				/** 构造出执行的目标方法和拦截器链 */
 				// Determine handler for the current request.
 				mappedHandler = getHandler(processedRequest);
+				/** 找不到处理映射直接 sendError() */
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
@@ -1131,11 +1136,12 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 			else {
 				Object handler = (mappedHandler != null ? mappedHandler.getHandler() : null);
+				/** 抛出异常后由异常解析器解析异常，尝试返回 ModelAndView 无法返回会抛出异常，最终抛给tomcat*/
 				mv = processHandlerException(request, response, handler, exception);
 				errorView = (mv != null);
 			}
 		}
-
+		/** 是否执行渲染 */
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
 			render(mv, request, response);

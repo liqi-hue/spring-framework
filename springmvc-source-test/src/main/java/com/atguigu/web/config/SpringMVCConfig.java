@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Configuration
 @ComponentScan(basePackages = "com.atguigu.web",includeFilters = {
-		@ComponentScan.Filter(type = FilterType.ANNOTATION,value = RestController.class)
+		@ComponentScan.Filter(type = FilterType.ANNOTATION,value = Controller.class)
 },useDefaultFilters = false)
 public class SpringMVCConfig {
 

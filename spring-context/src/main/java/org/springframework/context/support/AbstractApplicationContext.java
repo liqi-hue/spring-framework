@@ -588,7 +588,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Instantiate all remaining (non-lazy-init) singletons.
 				/** 创建剩余单例bean */
 				finishBeanFactoryInitialization(beanFactory);
-
+				/** 发布事件，SpringMVC会初始化DispatcherServlet九大核心组件，(事件驱动 )*/
 				// Last step: publish corresponding event.
 				finishRefresh();
 			}
@@ -942,7 +942,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Propagate refresh to lifecycle processor first.
 		getLifecycleProcessor().onRefresh();
-
+		/** 发布容器初始化完成的事件 */
 		// Publish the final event.
 		publishEvent(new ContextRefreshedEvent(this));
 
